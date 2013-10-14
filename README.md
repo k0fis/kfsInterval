@@ -1,0 +1,4 @@
+kfsInterval
+===========
+
+inteval arithmetics

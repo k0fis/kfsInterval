@@ -2,21 +2,24 @@ package kfs.interval;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 /**
  *
  * @author pavedrim
  */
-public class kfsOneIntervalList extends ArrayList<kfsOneInterval>{
+public class kfsOneIntervalList implements Iterable<kfsOneInterval> {
+    
+    private ArrayList<kfsOneInterval> lst;
     
     void joinPlus() {
         
     }
     
-    public void plus(Date from, Date to) {
-        kfsOneInterval ta = new kfsOneInterval(from, to, kfsISign.plus);
-        for (int inx1 = 0; inx1 < size(); inx1++) {
-            kfsOneInterval ti = get(inx1);
+    public void add(Date from, Date to) {
+        kfsOneInterval ta = new kfsOneInterval(from, to);
+        for (int inx1 = 0; inx1 < lst.size(); inx1++) {
+            kfsOneInterval ti = lst.get(inx1);
             
         }
         /*
@@ -45,6 +48,14 @@ public class kfsOneIntervalList extends ArrayList<kfsOneInterval>{
          
         */        
         
-        add(new kfsOneInterval(from, to, kfsISign.plus));
-    }    
+        lst.add(new kfsOneInterval(from, to));
+    }
+
+    public Iterator<kfsOneInterval> iterator() {
+        return lst.iterator();
+    }
+    
+    public kfsOneIntervalList normalize() {
+        return this;
+    }
 }

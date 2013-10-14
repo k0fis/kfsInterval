@@ -10,9 +10,8 @@ public class kfsOneInterval {
 
     private final Date from;
     private final Date to;
-    private final kfsISign sign;
 
-    kfsOneInterval(Date from, Date to, kfsISign sign) {
+    kfsOneInterval(Date from, Date to) {
         if (from.before(to)) {
             this.from = from;
             this.to = to;
@@ -20,7 +19,6 @@ public class kfsOneInterval {
             this.from = to;
             this.to = from;
         }
-        this.sign = sign;
     }
 
     public boolean isTouching(kfsOneInterval other) {
@@ -30,15 +28,7 @@ public class kfsOneInterval {
     public Long getSeconds() {
         return to.getTime() - from.getTime();
     }
-    
-    public boolean isPlus() {
-        return sign == kfsISign.plus;
-    }
-
-    public boolean isMinus() {
-        return sign == kfsISign.minus;
-    }
-    
+        
     public Date getFrom() {
         return from;
     }

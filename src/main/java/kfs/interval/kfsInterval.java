@@ -10,21 +10,23 @@ import java.util.Date;
 public class kfsInterval {
 
     private Long span;
-    private final kfsOneIntervalList intervals;
+    private final kfsOneIntervalList plus;
+    private final kfsOneIntervalList minus;
 
     public kfsInterval() {
-        intervals = new kfsOneIntervalList();
+        plus = new kfsOneIntervalList();
+        minus = new kfsOneIntervalList();
         span = -1l;
     }
 
     public kfsInterval plus(Date from, Date to) {
-        intervals.plus(from, to);
+        plus.add(from, to);
         span = -1l;
         return this;
     }
 
     public kfsInterval minus(Date from, Date to) {
-        intervals.add(new kfsOneInterval(from, to, kfsISign.minus));
+        minus.add(from, to);
         span = -1l;
         return this;
     }
@@ -33,9 +35,9 @@ public class kfsInterval {
         if (span >= 0l) {
             return span;
         }
-        ArrayList<kfsOneInterval> outLst = getNormalized(intervals);
+//        ArrayList<kfsOneInterval> outLst = getNormalized(intervals);
         span = 0l;
-        for (kfsOneInterval ii : outLst) {
+        for (kfsOneInterval ii : plus.normalize()) {
             span += ii.getSeconds();
         }
         return span;
@@ -51,9 +53,9 @@ public class kfsInterval {
             return outLst;
         }
         for (kfsOneInterval ii : inLst) {
-            if (ii.isPlus()) {
+            //if (ii.isPlus()) {
                 outLst.add(ii);
-            }
+            //}
         }
 
 /*

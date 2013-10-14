@@ -9,8 +9,16 @@ import java.util.Date;
  */
 public class kfsOneIntervalList extends ArrayList<kfsOneInterval>{
     
-    public void plus(Date from, Date to) {
+    void joinPlus() {
         
+    }
+    
+    public void plus(Date from, Date to) {
+        kfsOneInterval ta = new kfsOneInterval(from, to, kfsISign.plus);
+        for (int inx1 = 0; inx1 < size(); inx1++) {
+            kfsOneInterval ti = get(inx1);
+            
+        }
         /*
 
             --

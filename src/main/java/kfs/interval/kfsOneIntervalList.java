@@ -10,8 +10,16 @@ import java.util.Iterator;
  */
 public class kfsOneIntervalList implements Iterable<kfsOneInterval> {
 
-    private ArrayList<kfsOneInterval> lst;
+    private final ArrayList<kfsOneInterval> lst;
 
+    public kfsOneIntervalList() {
+        lst = new ArrayList<kfsOneInterval>();
+    }
+    
+    private kfsOneIntervalList(ArrayList<kfsOneInterval> lst) {
+        this.lst = lst;
+    }
+    
     public void add(Date from, Date to) {
         lst.add(new kfsOneInterval(from, to));
     }
@@ -20,75 +28,54 @@ public class kfsOneIntervalList implements Iterable<kfsOneInterval> {
         return lst.iterator();
     }
 
-    public kfsOneIntervalList normalize() {
-        ArrayList<kfsOneInterval> outLst = new ArrayList<kfsOneInterval>();
-        if (lst.size() <= 1) {
-            return this;
-        }
-        
-        for (int inx1 = 0; inx1 < lst.size(); inx1++) {
-            kfsOneInterval t1 = lst.get(inx1);
-            for (int inx2 = 0; inx2 < lst.size(); inx2++) {
-                if (inx1 != inx2) {
-                    kfsOneInterval t2 = lst.get(inx2);
-                }
-            }            
-        }
-
-        /*
-    loop
-      rep1 := FALSE;
-      for inx1 IN p_lst.first .. p_lst.last loop
-        for inx2 IN p_lst.first .. p_lst.last loop
-          if (inx1 != inx2) then
-            --
-            if (p_lst(inx1).is_touch(p_lst(inx2))) then
-              -- from
-              if (p_lst(inx1).m_from < p_lst(inx2).m_from) then
-                p_lst(inx1).m_from := p_lst(inx1).m_from;
-              else
-                p_lst(inx1).m_from := p_lst(inx2).m_from;
-              end if; -- from
-
-              -- to
-              if (p_lst(inx1).m_to >  p_lst(inx2).m_to) then
-                p_lst(inx1).m_to := p_lst(inx1).m_to;
-              else
-                p_lst(inx1).m_to := p_lst(inx2).m_to;
-              end if; -- to
-
-              p_lst.delete(inx2);
-              rep1 := TRUE;
-              exit;
-            end if; -- inx1 != inx2
-            --
-          end if;
-        end loop;
-        if (rep1) then exit; end if;
-      end loop;
-      if (not rep1) then exit; end if;
-    end loop;
-         */
-        return this;
+    public kfsOneIntervalList normalize() throws kfsIntervalException {
+        return new kfsOneIntervalList(normalize(new ArrayList<kfsOneInterval>(lst)));
     }
     
+    private static ArrayList<kfsOneInterval> normalize(ArrayList<kfsOneInterval> lst) throws kfsIntervalException {
+        if (lst.size() <= 1) {
+            return lst;
+        }
+        boolean br;
+        while (true) {
+            br = false;
+            for (int inx1 = 0; inx1 < lst.size(); inx1++) {
+                for (int inx2 = 0; inx2 < lst.size(); inx2++) {
+                    if (inx1 != inx2) {
+                        if (lst.get(inx1).isTouching(lst.get(inx2))) {
+                            kfsOneInterval t2 = kfsOneInterval.createOne(lst.get(inx1), lst.get(inx2));
+                            lst.remove(inx1);
+                            lst.remove(inx2);
+                            lst.add(t2);
+                            br = true;
+                            break;
+                        }
+                    }
+                }
+                if (br) {
+                    break;
+                }
+            }
+            if (!br) {
+                break;
+            }
+        }
+        return lst;
+    }
+
+//  a:   ----------F--------------------------T----------   // base
+// MINUS
+//  c1:  -F--T-----|--------------------------|----------   // not intersect
+//  c2:  ----------|--------------------------|---F-T----   // not intersect
+//  b1:  ---F------|---------T----------------|----------   // intersect
+//  b2:  -------F--|--------------------------|--T-------   // intersect
+//  b3:  ----------|-----------------F--------|--T-------   // intersect
+//  b4:  ----------|-----F---------T----------|----------   // intersect
     public kfsOneIntervalList minus(kfsOneInterval mVal) {
         return this;
     }
     
-            
 
-/*
-  a:   ----------F--------------------------T----------   // base
- MINUS
-  c1:  -F--T-----|--------------------------|----------   // not intersect
-  c2:  ----------|--------------------------|---F-T----   // not intersect
-
-  b1:  ---F------|---------T----------------|----------   // intersect
-  b2:  -------F--|--------------------------|--T-------   // intersect
-  b3:  ----------|-----------------F--------|--T-------   // intersect
-  b4:  ----------|-----F---------T----------|----------   // intersect
-*/
 /*
   STATIC PROCEDURE realy_minus(v_lst IN OUT  kfs_list_interv_one, v_interv kfs_interv_one) AS
     rep1 BOOLEAN;
@@ -155,4 +142,5 @@ public class kfsOneIntervalList implements Iterable<kfsOneInterval> {
      end loop;
   END realy_minus;
   */    
+    
 }

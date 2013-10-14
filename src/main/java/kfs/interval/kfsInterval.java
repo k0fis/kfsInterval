@@ -30,16 +30,16 @@ public class kfsInterval {
         return this;
     }
 
-    public Long getSpan() {
+    public Long getSpan() throws kfsIntervalException {
         if (span >= 0l) {
             return span;
         }
         span = 0l;
-        plus.normalize();
+        kfsOneIntervalList pls = plus.normalize();
         for (kfsOneInterval ii : minus.normalize()) {
-            plus.minus(ii);
+            pls.minus(ii);
         }
-        for (kfsOneInterval ii : plus) {
+        for (kfsOneInterval ii : pls) {
             span += ii.getSeconds();
         }
         return span;

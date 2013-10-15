@@ -13,7 +13,7 @@ public class kfsIntervalException extends Exception {
      * @param msg the detail message.
      * @param ex source exception.
      */
-    public kfsIntervalException(String msg, Throwable ex) {
+    kfsIntervalException(String msg, Throwable ex) {
         super(msg, ex);
     }
 
@@ -23,7 +23,7 @@ public class kfsIntervalException extends Exception {
      *
      * @param msg the detail message.
      */
-    public kfsIntervalException(String msg) {
+    kfsIntervalException(String msg) {
         super(msg);
     }
 }
